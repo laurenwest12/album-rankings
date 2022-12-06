@@ -3,13 +3,16 @@ const app = express();
 
 const { sheetAuth } = require('./sheet/auth');
 const { getRows, getLastRow, addToDatabase } = require('./sheet/rows');
-const { getAlbum } = require('./spotify/albums');
-const { spotifyAuth } = require('./spotify/auth');
+const { searchSpotify } = require('./spotify/search');
 
 app.listen(3000, async () => {
   console.log('Listening...');
   try {
-    await getAlbum();
+    const album = await searchSpotify({
+      q: 'Midnights,Taylor Swift',
+      type: 'album',
+    });
+    console.log(album);
   } catch (err) {
     console.log(err);
   }
