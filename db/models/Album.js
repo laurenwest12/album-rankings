@@ -19,6 +19,13 @@ const Album = db.define('album', {
       notEmpty: true,
     },
   },
+  spreadsheetName: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: true,
+    },
+  },
   month: {
     type: Sequelize.STRING,
     allowNull: false,

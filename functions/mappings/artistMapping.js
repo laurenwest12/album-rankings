@@ -1,5 +1,4 @@
-const { spotifyAuth } = require('../spotify/auth');
-const { searchSpotify } = require('../spotify/search');
+const { searchSpotify } = require('../../spotify/search');
 
 const mapArtists = async (artists) => {
   const mapped = [];

@@ -6,26 +6,22 @@ const createUsers = async (arr) => {
     await User.create(arr[i]);
   }
 
-  console.log('Successfully created Users');
+  console.log('Created Users');
 };
 
 const createArtists = async (arr) => {
   for (let i = 0; i < arr.length; ++i) {
     await Artist.create(arr[i]);
   }
+
+  console.log('Created Artists');
 };
 
 const syncAndSeed = async (artists) => {
   try {
     await db.authenticate();
     await db.sync({ alter: true });
-    // await createUsers([
-    //   { name: 'Doug' },
-    //   { name: 'Lauren' },
-    //   { name: 'Travis' },
-    // ]);
-    // await createArtists(artists);
-    console.log('Successfully seeded');
+    console.log('Seeded database');
   } catch (err) {
     console.log(err);
   }

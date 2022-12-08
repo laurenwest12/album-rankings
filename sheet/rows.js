@@ -39,9 +39,31 @@ const getArtists = async () => {
   );
 };
 
+const getAlbums = async () => {
+  let rows = await getRows();
+  rows = rows.filter((row) => row.Album);
+  const albums = [];
+
+  for (let i = 0; i < rows.length; ++i) {
+    const album = rows[i];
+    albums.push({
+      name: album.Album,
+      artist: album.Artist,
+      month: album.Month,
+      year: album.Year,
+      genre: album.Genre,
+    });
+  }
+
+  return albums.sort((a, b) =>
+    a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+  );
+};
+
 module.exports = {
   getRows,
   getLastRow,
   addToDatabase,
   getArtists,
+  getAlbums,
 };
