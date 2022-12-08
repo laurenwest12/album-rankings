@@ -13,7 +13,7 @@ const ArtistType = new GraphQLObjectType({
     followers: { type: GraphQLInt },
     month: { type: GraphQLString },
     year: { type: GraphQLString },
-    genre: { type: new GraphQLList(GraphQLString) },
+    genres: { type: new GraphQLList(GraphQLString) },
   }),
 });
 
