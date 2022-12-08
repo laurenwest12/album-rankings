@@ -23,7 +23,7 @@ app.listen(3000, async () => {
 
     const albums = await getAlbums();
     const mappedAlbums = await mapAlbums(albums);
-    console.log(mappedAlbums);
+    await syncAndSeed(mappedAlbums);
 
     // await syncAndSeed(mappedArtists);
 

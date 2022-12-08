@@ -5,7 +5,6 @@ const mapArtists = async (artists) => {
 
   for (let i = 0; i < artists.length; ++i) {
     const artist = artists[i];
-    console.log(artist);
     const spotifyRes = await searchSpotify({
       q: artist,
       type: 'artist',

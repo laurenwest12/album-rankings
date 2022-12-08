@@ -17,7 +17,23 @@ const createArtists = async (arr) => {
   console.log('Created Artists');
 };
 
-const syncAndSeed = async (artists) => {
+const createAlbums = async (arr) => {
+  for (let i = 0; i < arr.length; ++i) {
+    let album = arr[i];
+    const { spreadsheetArtist } = album;
+    const artist = await Artist.findOne({
+      where: { spreadsheetName: spreadsheetArtist },
+    });
+
+    const artistUid = artist.dataValues.uid;
+
+    album = { ...album, artistUid };
+    await Album.create(album);
+  }
+  console.log('Creaded Albums');
+};
+
+const syncAndSeed = async (albums) => {
   try {
     await db.authenticate();
     await db.sync({ alter: true });

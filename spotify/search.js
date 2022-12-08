@@ -20,14 +20,36 @@ const searchSpotify = async (obj) => {
   const url = `https://api.spotify.com/v1/search?${string}`;
 
   try {
-    const res = await axios.get(url, {
+    let res = await axios.get(url, {
       headers: headers,
     });
 
-    return {
-      status: res.status,
-      data: res.data[type].items[0],
-    };
+    if (res.data[type].items[0]) {
+      return {
+        status: res.status,
+        data: res.data[type].items[0],
+      };
+    } else {
+      const qArr = obj.q.split(',');
+      obj.q = qArr[0];
+      const newStr = qs.stringify(obj);
+      const newUrl = `https://api.spotify.com/v1/search?${newStr}`;
+
+      const newRes = await axios.get(newUrl, {
+        headers: headers,
+      });
+
+      if (newRes.data[type].items[0]) {
+        return {
+          status: newRes.status,
+          data: newRes.data[type].items[0],
+        };
+      } else {
+        return {
+          status: 404,
+        };
+      }
+    }
   } catch (err) {
     return err;
   }

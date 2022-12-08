@@ -3,7 +3,7 @@ const { searchSpotify } = require('../../spotify/search');
 const mapAlbums = async (albums) => {
   const mapped = [];
 
-  for (let i = 0; i < 5; ++i) {
+  for (let i = 0; i < albums.length; ++i) {
     const album = albums[i];
 
     const { name, artist, month, year, genre } = album;
@@ -17,7 +17,8 @@ const mapAlbums = async (albums) => {
 
     spotifyRes.status === 200
       ? mapped.push({
-          name: data.name,
+          spotifyId: data?.id,
+          name: data?.name,
           spreadsheetName: name.trim(),
           spreadsheetArtist: artist.trim(),
           month,
@@ -28,6 +29,7 @@ const mapAlbums = async (albums) => {
           imageUrl: data?.images[0].url,
         })
       : mapped.push({
+          spotifyId: '',
           name: '',
           spreadsheetName: name.trim(),
           spreadsheetArtist: artist.trim(),
@@ -35,34 +37,10 @@ const mapAlbums = async (albums) => {
           year,
           release_date: '',
           genre,
-          tracks: 0,
           imageUrl: '',
         });
   }
   return mapped;
-
-  //   spotifyRes.status === 200
-  //     ? mapped.push({
-  //         spotifyId: spotifyRes?.data?.id || '',
-  //         name: spotifyRes?.data?.name || artist,
-  //         spreadsheetName: artist,
-  //         imageUrl: spotifyRes?.data?.images[0]?.url || '',
-  //         popularity: spotifyRes?.data?.popularity || 0,
-  //         followers: spotifyRes?.data?.followers?.total || 0,
-  //         genres: spotifyRes?.data?.genres || [],
-  //       })
-  //     : mapped.push({
-  //         spotifyId: '',
-  //         name: artist,
-  //         spreadsheetName: artist,
-  //         imageUrl: '',
-  //         popularity: 0,
-  //         followers: 0,
-  //         genres: [],
-  //       });
-  // }
-
-  // return mapped.filter((artist, index) => mapped.indexOf(artist) === index);
 };
 
 module.exports = {

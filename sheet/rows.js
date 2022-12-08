@@ -55,9 +55,9 @@ const getAlbums = async () => {
     });
   }
 
-  return albums.sort((a, b) =>
-    a.name.toLowerCase().localeCompare(b.name.toLowerCase())
-  );
+  return albums
+    .sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+    .filter((album) => album.name !== 'Album');
 };
 
 module.exports = {

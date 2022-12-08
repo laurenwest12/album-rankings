@@ -47,6 +47,10 @@ const Album = db.define('album', {
       notEmpty: true,
     },
   },
+  tracks: {
+    type: Sequelize.INTEGER,
+    allowNull: true,
+  },
   imageUrl: {
     type: Sequelize.STRING,
     allowNull: false,
