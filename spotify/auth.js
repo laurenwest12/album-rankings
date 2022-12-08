@@ -1,4 +1,3 @@
-const { client_id, client_secret } = require('../config/config');
 const axios = require('axios');
 
 const spotifyAuth = async () => {
@@ -12,7 +11,9 @@ const spotifyAuth = async () => {
         headers: {
           Authorization:
             'Basic ' +
-            Buffer.from(client_id + ':' + client_secret).toString('base64'),
+            Buffer.from(
+              process.env.CLIENT_ID + ':' + process.env.CLIENT_SECRET
+            ).toString('base64'),
           'Content-Type': 'application/x-www-form-urlencoded',
           'Accept-Encoding': 'application/json',
         },
