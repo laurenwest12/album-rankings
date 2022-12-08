@@ -5,6 +5,7 @@ const app = express();
 const { syncAndSeed } = require('./db/seed');
 const { mapAlbums } = require('./functions/mappings/albumMapping');
 const { mapArtists } = require('./functions/mappings/artistMapping');
+const { mapReviews } = require('./functions/mappings/reviewMapping');
 const { sheetAuth } = require('./sheet/auth');
 const {
   getRows,
@@ -12,6 +13,7 @@ const {
   addToDatabase,
   getArtists,
   getAlbums,
+  getReviews,
 } = require('./sheet/rows');
 const { searchSpotify } = require('./spotify/search');
 
@@ -21,9 +23,13 @@ app.listen(3000, async () => {
     // const artists = await getArtists();
     // const mappedArtists = await mapArtists(artists);
 
-    const albums = await getAlbums();
-    const mappedAlbums = await mapAlbums(albums);
-    await syncAndSeed(mappedAlbums);
+    // const albums = await getAlbums();
+    // const mappedAlbums = await mapAlbums(albums);
+
+    const reviews = await getReviews();
+    const mappedReviews = await mapReviews(reviews);
+
+    await syncAndSeed(mappedReviews);
 
     // await syncAndSeed(mappedArtists);
 

@@ -14,7 +14,7 @@ const mapArtists = async (artists) => {
       ? mapped.push({
           spotifyId: spotifyRes?.data?.id || '',
           name: spotifyRes?.data?.name || artist,
-          spreadsheetName: artist,
+          spreadsheetName: artist.trim(),
           imageUrl: spotifyRes?.data?.images[0]?.url || '',
           popularity: spotifyRes?.data?.popularity || 0,
           followers: spotifyRes?.data?.followers?.total || 0,
@@ -22,8 +22,8 @@ const mapArtists = async (artists) => {
         })
       : mapped.push({
           spotifyId: '',
-          name: artist,
-          spreadsheetName: artist,
+          name: artist.trim(),
+          spreadsheetName: artist.trim(),
           imageUrl: '',
           popularity: 0,
           followers: 0,

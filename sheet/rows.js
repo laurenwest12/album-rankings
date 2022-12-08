@@ -60,10 +60,68 @@ const getAlbums = async () => {
     .filter((album) => album.name !== 'Album');
 };
 
+const getReviews = async () => {
+  let rows = await getRows();
+  rows = rows.filter(
+    ({ LaurenRating, TravisRating, DougRating, Artist }) =>
+      (LaurenRating || TravisRating || DougRating) &&
+      Artist !== 'Artist' &&
+      Artist
+  );
+  const reviews = [];
+
+  for (let i = 0; i < rows.length; ++i) {
+    const review = rows[i];
+    const {
+      Artist,
+      Album,
+      LaurenRating,
+      TravisRating,
+      DougRating,
+      LaurenSong,
+      TravisSong,
+      DougSong,
+    } = review;
+
+    if (DougRating && DougSong) {
+      reviews.push({
+        spreadsheetArtist: Artist,
+        spreadsheetAlbum: Album,
+        userName: 'Doug',
+        rating: DougRating,
+        favoriteSong: DougSong,
+      });
+    }
+
+    if (LaurenRating && LaurenSong) {
+      reviews.push({
+        spreadsheetArtist: Artist,
+        spreadsheetAlbum: Album,
+        userName: 'Lauren',
+        rating: LaurenRating,
+        favoriteSong: LaurenSong,
+      });
+    }
+
+    if (TravisRating && TravisSong) {
+      reviews.push({
+        spreadsheetArtist: Artist,
+        spreadsheetAlbum: Album,
+        userName: 'Travis',
+        rating: TravisRating,
+        favoriteSong: TravisSong,
+      });
+    }
+  }
+
+  return reviews;
+};
+
 module.exports = {
   getRows,
   getLastRow,
   addToDatabase,
   getArtists,
   getAlbums,
+  getReviews,
 };

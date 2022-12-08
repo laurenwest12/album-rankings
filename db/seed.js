@@ -30,13 +30,57 @@ const createAlbums = async (arr) => {
     album = { ...album, artistUid };
     await Album.create(album);
   }
-  console.log('Creaded Albums');
+  console.log('Created Albums');
 };
 
-const syncAndSeed = async (albums) => {
+const createReviews = async (arr) => {
+  for (let i = 0; i < arr.length; ++i) {
+    let review = arr[i];
+    const {
+      spreadsheetArtist,
+      spreadsheetAlbum,
+      userName,
+      rating,
+      favoriteSong,
+    } = review;
+
+    // const artist = await Artist.findOne({
+    //   where: { spreadsheetName: spreadsheetArtist },
+    // });
+    // const artistUid = artist.dataValues.uid;
+
+    // const album = await Album.findOne({
+    //   where: { spreadsheetName: spreadsheetAlbum },
+    // });
+    // const albumUid = album.dataValues.uid;
+
+    // const user = await User.findOne({
+    //   where: { name: userName },
+    // });
+    // const userUid = user.dataValues.uid;
+
+    // review = {
+    //   spreadsheetAlbum,
+    //   spreadsheetArtist,
+    //   rating,
+    //   favoriteSong,
+    //   artistUid,
+    //   albumUid,
+    //   userUid,
+    // };
+
+    console.log(review);
+
+    await Review.create(review);
+  }
+  console.log('Created Reviews');
+};
+
+const syncAndSeed = async (reviews) => {
   try {
     await db.authenticate();
     await db.sync({ alter: true });
+    await createReviews(reviews);
     console.log('Seeded database');
   } catch (err) {
     console.log(err);
