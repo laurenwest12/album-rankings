@@ -36,40 +36,33 @@ const createAlbums = async (arr) => {
 const createReviews = async (arr) => {
   for (let i = 0; i < arr.length; ++i) {
     let review = arr[i];
-    const {
-      spreadsheetArtist,
+    const { spreadsheetArtist, spreadsheetAlbum, user, rating, favoriteSong } =
+      review;
+
+    const artist = await Artist.findOne({
+      where: { spreadsheetName: spreadsheetArtist },
+    });
+    const artistUid = artist.dataValues.uid;
+
+    const album = await Album.findOne({
+      where: { spreadsheetName: spreadsheetAlbum },
+    });
+    const albumUid = album.dataValues.uid;
+
+    const userObj = await User.findOne({
+      where: { name: user },
+    });
+    const userUid = userObj.dataValues.uid;
+
+    review = {
       spreadsheetAlbum,
-      userName,
+      spreadsheetArtist,
       rating,
       favoriteSong,
-    } = review;
-
-    // const artist = await Artist.findOne({
-    //   where: { spreadsheetName: spreadsheetArtist },
-    // });
-    // const artistUid = artist.dataValues.uid;
-
-    // const album = await Album.findOne({
-    //   where: { spreadsheetName: spreadsheetAlbum },
-    // });
-    // const albumUid = album.dataValues.uid;
-
-    // const user = await User.findOne({
-    //   where: { name: userName },
-    // });
-    // const userUid = user.dataValues.uid;
-
-    // review = {
-    //   spreadsheetAlbum,
-    //   spreadsheetArtist,
-    //   rating,
-    //   favoriteSong,
-    //   artistUid,
-    //   albumUid,
-    //   userUid,
-    // };
-
-    console.log(review);
+      artistUid,
+      albumUid,
+      userUid,
+    };
 
     await Review.create(review);
   }
