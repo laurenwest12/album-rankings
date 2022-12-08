@@ -73,8 +73,6 @@ const syncAndSeed = async (reviews) => {
   try {
     await db.authenticate();
     await db.sync({ alter: true });
-    await createReviews(reviews);
-    console.log('Seeded database');
   } catch (err) {
     console.log(err);
   }
