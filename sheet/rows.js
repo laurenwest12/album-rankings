@@ -23,8 +23,25 @@ const addToDatabase = async () => {
   await rows[lastRowNumber - 1].save();
 };
 
+const getArtists = async () => {
+  const rows = await getRows();
+  const artists = [];
+  for (let i = 0; i < rows.length; ++i) {
+    rows[i].Artist && artists.push(rows[i].Artist.trim());
+  }
+
+  const uniqueArtists = artists.filter(
+    (artist, index) => artists.indexOf(artist) === index && artist !== 'Artist'
+  );
+
+  return uniqueArtists.sort((a, b) =>
+    a.toLowerCase().localeCompare(b.toLowerCase())
+  );
+};
+
 module.exports = {
   getRows,
   getLastRow,
   addToDatabase,
+  getArtists,
 };
