@@ -16,6 +16,7 @@ const mapArtists = async (artists) => {
       ? mapped.push({
           spotifyId: spotifyRes?.data?.id || '',
           name: spotifyRes?.data?.name || artist,
+          spreadsheetName: artist,
           imageUrl: spotifyRes?.data?.images[0]?.url || '',
           popularity: spotifyRes?.data?.popularity || 0,
           followers: spotifyRes?.data?.followers?.total || 0,
@@ -24,6 +25,7 @@ const mapArtists = async (artists) => {
       : mapped.push({
           spotifyId: '',
           name: artist,
+          spreadsheetName: artist,
           imageUrl: '',
           popularity: 0,
           followers: 0,
@@ -31,7 +33,7 @@ const mapArtists = async (artists) => {
         });
   }
 
-  return mapped;
+  return mapped.filter((artist, index) => mapped.indexOf(artist) === index);
 };
 
 module.exports = {

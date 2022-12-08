@@ -19,6 +19,13 @@ const Artist = db.define('artist', {
       notEmpty: true,
     },
   },
+  spreadsheetName: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: true,
+    },
+  },
   imageUrl: {
     type: Sequelize.STRING,
     allowNull: false,
