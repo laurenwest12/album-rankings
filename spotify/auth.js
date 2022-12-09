@@ -1,5 +1,12 @@
+//Import the required librares
 const axios = require('axios');
 
+/* Connect to Spotify using client credential authorization
+   If successful...
+        - Returns an object with the response status and authorization token
+    If fails...
+        - Returns an object with the response status and the error message
+*/
 const spotifyAuth = async () => {
   try {
     const res = await axios.post(
