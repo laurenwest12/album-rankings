@@ -5,12 +5,14 @@ const {
   GraphQLInt,
   GraphQLString,
   GraphQLList,
+  GraphQLFloat,
 } = graphql;
 
 const { Album, Artist, Review, User } = require('../db/models/index');
 const { AlbumType, ArtistType, ReviewType, UserType } = require('./types');
 
 const Sequelize = require('sequelize');
+const { calculateTotalReview } = require('../functions/calculateTotalReview');
 const Op = Sequelize.Op;
 
 const RootQuery = new GraphQLObjectType({
@@ -30,7 +32,6 @@ const RootQuery = new GraphQLObjectType({
 
         return User.findAll(parameters).then((data) => {
           return data.map((user) => {
-            console.log(user.dataValues);
             return user.dataValues;
           });
         });
@@ -39,7 +40,7 @@ const RootQuery = new GraphQLObjectType({
     getAllArtists: {
       type: new GraphQLList(ArtistType),
       args: {
-        name: { type: new GraphQLList(GraphQLString) },
+        names: { type: new GraphQLList(GraphQLString) },
         albums: { type: new GraphQLList(GraphQLString) },
       },
       resolve(parent, args) {
@@ -48,9 +49,9 @@ const RootQuery = new GraphQLObjectType({
           include: [Album],
         };
 
-        if (args.name) {
+        if (args.names) {
           parameters['where']['spreadsheetName'] = {
-            [Op.in]: args.name,
+            [Op.in]: args.names,
           };
         }
 
@@ -74,23 +75,109 @@ const RootQuery = new GraphQLObjectType({
     },
     getAllAlbums: {
       type: new GraphQLList(AlbumType),
-      args: { name: { type: new GraphQLList(GraphQLString) } },
+      args: {
+        names: { type: new GraphQLList(GraphQLString) },
+        artists: { type: new GraphQLList(GraphQLString) },
+        genres: { type: new GraphQLList(GraphQLString) },
+        years: { type: new GraphQLList(GraphQLString) },
+        users: { type: new GraphQLList(GraphQLString) },
+        minRating: { type: GraphQLFloat },
+        maxRating: { type: GraphQLFloat },
+      },
       resolve(parent, args) {
         let parameters = {
           where: {},
-          include: Artist,
+          include: [Artist, Review],
         };
 
-        if (args.name) {
+        if (args.names) {
           parameters['where']['spreadsheetName'] = {
-            [Op.in]: args.name,
+            [Op.in]: args.names,
+          };
+        }
+
+        if (args.artists) {
+          parameters['include'].push({
+            model: Artist,
+            where: {
+              spreadsheetName: {
+                [Op.in]: args.artists,
+              },
+            },
+          });
+        }
+
+        if (args.users) {
+          parameters['include'].push({
+            model: Review,
+            where: {
+              userUid: {
+                [Op.in]: args.users,
+              },
+            },
+          });
+        }
+
+        if (args.genres) {
+          parameters['where']['genre'] = {
+            [Op.in]: args.genres,
+          };
+        }
+
+        if (args.years) {
+          parameters['where']['year'] = {
+            [Op.in]: args.years,
           };
         }
 
         return Album.findAll(parameters).then((data) => {
-          return data.map((album) => {
-            return album.dataValues;
-          });
+          if (args.minRating && args.maxRating) {
+            const filteredAlbums = data.filter((album) => {
+              const totalReview = calculateTotalReview(
+                album.dataValues.reviews,
+                album.dataValues.uid,
+                album.dataValues.artistUid
+              );
+
+              if (
+                totalReview.rating <= args.maxRating &&
+                totalReview.rating >= args.minRating
+              ) {
+                return album;
+              }
+            });
+            return filteredAlbums;
+          } else if (args.minRating) {
+            const filteredAlbums = data.filter((album) => {
+              const totalReview = calculateTotalReview(
+                album.dataValues.reviews,
+                album.dataValues.uid,
+                album.dataValues.artistUid
+              );
+
+              if (totalReview.rating >= args.minRating) {
+                return album;
+              }
+            });
+            return filteredAlbums;
+          } else if (args.maxRating) {
+            const filteredAlbums = data.filter((album) => {
+              const totalReview = calculateTotalReview(
+                album.dataValues.reviews,
+                album.dataValues.uid,
+                album.dataValues.artistUid
+              );
+
+              if (totalReview.rating <= args.maxRating) {
+                return album;
+              }
+            });
+            return filteredAlbums;
+          } else {
+            return data.map((album) => {
+              return album.dataValues;
+            });
+          }
         });
       },
     },

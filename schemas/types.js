@@ -1,5 +1,12 @@
 const graphql = require('graphql');
-const { GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLList } = graphql;
+const { calculateTotalReview } = require('../functions/calculateTotalReview');
+const {
+  GraphQLObjectType,
+  GraphQLInt,
+  GraphQLString,
+  GraphQLList,
+  GraphQLFloat,
+} = graphql;
 
 const AlbumType = new GraphQLObjectType({
   name: 'Album',
@@ -37,6 +44,41 @@ const AlbumType = new GraphQLObjectType({
           followers,
           genres,
         };
+      },
+    },
+    reviews: {
+      type: new GraphQLList(ReviewType),
+      resolve: (parent) => {
+        const reviews = parent.reviews.map(({ dataValues }) => {
+          const {
+            uid,
+            spreadsheetAlbum,
+            spreadsheetArtist,
+            rating,
+            favoriteSong,
+            artistUid,
+            albumUid,
+            userUid,
+          } = dataValues;
+
+          return {
+            uid,
+            spreadsheetAlbum,
+            spreadsheetArtist,
+            rating,
+            favoriteSong,
+            artistUid,
+            albumUid,
+            userUid,
+          };
+        });
+        const totalReview = calculateTotalReview(
+          reviews,
+          parent.uid,
+          parent.artistUid
+        );
+        reviews.push(totalReview);
+        return reviews;
       },
     },
   }),
@@ -87,6 +129,9 @@ const ReviewType = new GraphQLObjectType({
     spreadsheetArtist: { type: GraphQLString },
     rating: { type: GraphQLFloat },
     favoriteSong: { type: GraphQLString },
+    userUid: { type: GraphQLString },
+    artistUid: { type: GraphQLString },
+    albumUid: { type: GraphQLString },
   }),
 });
 
