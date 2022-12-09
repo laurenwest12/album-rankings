@@ -8,11 +8,7 @@ const {
 } = graphql;
 
 const { Album, Artist, Review, User } = require('../db/models/index');
-
-const AlbumType = require('./TypeDefs/AlbumType');
-const ArtistType = require('./TypeDefs/ArtistType');
-const ReviewType = require('./TypeDefs/ReviewType');
-const UserType = require('./TypeDefs/UserType');
+const { AlbumType, ArtistType, ReviewType, UserType } = require('./types');
 
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -42,16 +38,30 @@ const RootQuery = new GraphQLObjectType({
     },
     getAllArtists: {
       type: new GraphQLList(ArtistType),
-      args: { name: { type: new GraphQLList(GraphQLString) } },
+      args: {
+        name: { type: new GraphQLList(GraphQLString) },
+        albums: { type: new GraphQLList(GraphQLString) },
+      },
       resolve(parent, args) {
         let parameters = {
           where: {},
-          include: Album,
+          include: [Album],
         };
 
         if (args.name) {
           parameters['where']['spreadsheetName'] = {
             [Op.in]: args.name,
+          };
+        }
+
+        if (args.albums) {
+          parameters['include'] = {
+            model: Album,
+            where: {
+              spreadsheetName: {
+                [Op.in]: args.albums,
+              },
+            },
           };
         }
 
@@ -62,28 +72,28 @@ const RootQuery = new GraphQLObjectType({
         });
       },
     },
-    // getAllAlbums: {
-    //   type: new GraphQLList(AlbumType),
-    //   args: { name: { type: new GraphQLList(GraphQLString) } },
-    //   resolve(parent, args) {
-    //     let parameters = {
-    //       where: {},
-    //       include: Artist,
-    //     };
+    getAllAlbums: {
+      type: new GraphQLList(AlbumType),
+      args: { name: { type: new GraphQLList(GraphQLString) } },
+      resolve(parent, args) {
+        let parameters = {
+          where: {},
+          include: Artist,
+        };
 
-    //     if (args.name) {
-    //       parameters['where']['spreadsheetName'] = {
-    //         [Op.in]: args.name,
-    //       };
-    //     }
+        if (args.name) {
+          parameters['where']['spreadsheetName'] = {
+            [Op.in]: args.name,
+          };
+        }
 
-    //     return Album.findAll(parameters).then((data) => {
-    //       return data.map((album) => {
-    //         return album.dataValues;
-    //       });
-    //     });
-    // },
-    // },
+        return Album.findAll(parameters).then((data) => {
+          return data.map((album) => {
+            return album.dataValues;
+          });
+        });
+      },
+    },
   },
 });
 
