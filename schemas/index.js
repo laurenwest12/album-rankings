@@ -46,6 +46,7 @@ const RootQuery = new GraphQLObjectType({
       resolve(parent, args) {
         let parameters = {
           where: {},
+          include: Album,
         };
 
         if (args.name) {
@@ -61,28 +62,28 @@ const RootQuery = new GraphQLObjectType({
         });
       },
     },
-    getAllAlbums: {
-      type: new GraphQLList(AlbumType),
-      args: { name: { type: new GraphQLList(GraphQLString) } },
-      resolve(parent, args) {
-        let parameters = {
-          where: {},
-          include: Artist,
-        };
+    // getAllAlbums: {
+    //   type: new GraphQLList(AlbumType),
+    //   args: { name: { type: new GraphQLList(GraphQLString) } },
+    //   resolve(parent, args) {
+    //     let parameters = {
+    //       where: {},
+    //       include: Artist,
+    //     };
 
-        if (args.name) {
-          parameters['where']['spreadsheetName'] = {
-            [Op.in]: args.name,
-          };
-        }
+    //     if (args.name) {
+    //       parameters['where']['spreadsheetName'] = {
+    //         [Op.in]: args.name,
+    //       };
+    //     }
 
-        return Album.findAll(parameters).then((data) => {
-          return data.map((album) => {
-            return album.dataValues;
-          });
-        });
-      },
-    },
+    //     return Album.findAll(parameters).then((data) => {
+    //       return data.map((album) => {
+    //         return album.dataValues;
+    //       });
+    //     });
+    // },
+    // },
   },
 });
 

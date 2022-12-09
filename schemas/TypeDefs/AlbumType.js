@@ -1,5 +1,4 @@
 const graphql = require('graphql');
-const ArtistType = require('./ArtistType');
 const { GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLList } = graphql;
 
 const AlbumType = new GraphQLObjectType({
