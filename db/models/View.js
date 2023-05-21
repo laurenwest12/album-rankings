@@ -22,12 +22,24 @@ const View = db.define('view', {
     type: Sequelize.json,
     defaultValue: [],
   },
-  genres: {
+  dateAdded: {
     type: Sequelize.json,
     defaultValue: {
       start: '1900-01-01',
       end: '',
     },
+  },
+  ratedBy: {
+    type: Sequelize.json,
+    defaultValue: [],
+  },
+  ratingMin: {
+    type: Sequelize.FLOAT,
+    defaultValue: 0,
+  },
+  ratingMax: {
+    type: Sequelize.FLOAT,
+    defaultValue: 10,
   },
 });
 

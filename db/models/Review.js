@@ -20,6 +20,19 @@ const Review = db.define('review', {
   rating: {
     type: Sequelize.FLOAT,
     allowNull: false,
+    validate: {
+      isFloat: true,
+      isGreaterThanOrEqualToZero(value) {
+        if (value < 0) {
+          throw new Error('Rating must be greater than or equal to 0.');
+        }
+      },
+      isLessThanOrEqualToTen(value) {
+        if (value > 10) {
+          throw new Error('Rating must be less than or equal to 10.');
+        }
+      },
+    },
   },
   favoriteSong: {
     type: Sequelize.STRING,
