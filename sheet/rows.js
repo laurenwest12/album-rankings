@@ -2,6 +2,12 @@ const { mapAlbum } = require('../functions/mappings/albumMapping');
 const { mapArtist } = require('../functions/mappings/artistMapping');
 const { sheetAuth } = require('./auth');
 
+const getSheet = async () => {
+  const doc = await sheetAuth();
+  const sheet = doc.sheetsByIndex[0];
+  return sheet;
+};
+
 const getRows = async () => {
   const doc = await sheetAuth();
   await doc.loadInfo();
@@ -11,10 +17,13 @@ const getRows = async () => {
 };
 
 const getLastRow = async () => {
-  const rows = await getRows();
-  const albumEntries = rows.filter((row) => row.Artist);
-  const lastRowNumber = albumEntries[albumEntries.length - 1]._rowNumber;
-  return lastRowNumber;
+  console.log('here');
+  // const sheet = await getSheet();
+  // const lastRow = sheet.rowCount;
+  // console.log(lastRow);
+  // const albumEntries = rows.filter((row) => row.Artist);
+  // const lastRowNumber = albumEntries[albumEntries.length - 1]._rowNumber;
+  // return lastRowNumber;
 };
 
 const addToDatabase = async () => {

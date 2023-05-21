@@ -4,13 +4,12 @@ const express = require('express');
 const { graphqlHTTP } = require('express-graphql');
 const cors = require('cors');
 
-const { users } = require('./config/config');
+// const { users } = require('./config/config');
 
 //Import the defined schema
 const schema = require('./schemas/index');
 
-const { getData } = require('./sheet/rows');
-const { syncAndSeed } = require('./db/seed');
+const { getData, getLastRow } = require('./sheet/rows');
 
 //Initialzie the express server and configure it to use GraphQL
 const app = express();
@@ -27,4 +26,5 @@ app.use(
 // Start the server
 app.listen(3000, async () => {
   console.log('Serving is running...');
+  await getLastRow();
 });

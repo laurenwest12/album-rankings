@@ -56,10 +56,16 @@ const Album = db.define('album', {
     allowNull: false,
     defaultValue: '',
   },
-  releaseDate: {},
-  dateAdded: {},
+  releaseDate: {
+    type: Sequelize.DATE,
+    allowNull: false,
+  },
+  dateAdded: {
+    type: Sequelize.DATE,
+    allowNull: false,
+  },
   spotifyGenres: {
-    type: Sequelize.json,
+    type: Sequelize.JSON,
     allowNull: false,
     defaultValue: [],
   },

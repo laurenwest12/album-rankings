@@ -15,22 +15,22 @@ const View = db.define('view', {
     },
   },
   years: {
-    type: Sequelize.json,
+    type: Sequelize.JSON,
     defaultValue: [],
   },
   genres: {
-    type: Sequelize.json,
+    type: Sequelize.JSON,
     defaultValue: [],
   },
   dateAdded: {
-    type: Sequelize.json,
+    type: Sequelize.JSON,
     defaultValue: {
       start: '1900-01-01',
       end: '',
     },
   },
   ratedBy: {
-    type: Sequelize.json,
+    type: Sequelize.JSON,
     defaultValue: [],
   },
   ratingMin: {
