@@ -1,29 +1,40 @@
 const { mapAlbum } = require('../functions/mappings/albumMapping');
 const { mapArtist } = require('../functions/mappings/artistMapping');
-const { sheetAuth } = require('./auth');
-
-const getSheet = async () => {
-  const doc = await sheetAuth();
-  const sheet = doc.sheetsByIndex[0];
-  return sheet;
-};
+const { googleSheetsAuth } = require('./auth');
+const Sheet = require('./mapping');
 
 const getRows = async () => {
-  const doc = await sheetAuth();
-  await doc.loadInfo();
-  const sheet = await doc.sheetsByIndex[0];
-  const rows = await sheet.getRows();
-  return rows;
+  // Get the sheet and the row data
+  const sheet = await getSheet();
+  const { rowData } = sheet[0];
+
+  let firstRow = rowData[0]?.values;
+  const albumRanking = new Sheet();
+  albumRanking.addUsers(firstRow);
+  console.log(albumRanking.users);
+  // // Get the last row where there is data
+  // let lastRow = rows.length;
+
+  // // Find the artist associated with the last row if there is one
+  // let lastRowArtist = rows[lastRow]?.Artist;
+
+  // // Keep looping through the last rows in the sheet until you find a row that has an artist, this is to find the last artist that was added
+  // while (!lastRowArtist) {
+  //   lastRow--;
+  //   lastRowArtist = rows[lastRow]?.Artist;
+  // }
+
+  // return lastRow;
 };
 
-const getLastRow = async () => {
-  console.log('here');
-  // const sheet = await getSheet();
-  // const lastRow = sheet.rowCount;
-  // console.log(lastRow);
-  // const albumEntries = rows.filter((row) => row.Artist);
-  // const lastRowNumber = albumEntries[albumEntries.length - 1]._rowNumber;
-  // return lastRowNumber;
+const getSheet = async () => {
+  const data = await googleSheetsAuth();
+  const firstSheet = data[0].data;
+  return firstSheet;
+  // await doc.loadInfo();
+  // const sheet = await doc.sheetsByIndex[0];
+  // const rows = await sheet.getRows();
+  // return rows;
 };
 
 const addToDatabase = async () => {
@@ -214,7 +225,6 @@ const getReviews = async () => {
 
 module.exports = {
   getRows,
-  getLastRow,
   addToDatabase,
   getData,
   getArtists,
