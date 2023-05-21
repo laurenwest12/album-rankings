@@ -1,5 +1,32 @@
 const { searchSpotify } = require('../../spotify/search');
 
+const mapArtist = async (artist) => {
+  const spotifyRes = await searchSpotify({
+    q: artist,
+    type: 'artist',
+  });
+
+  return spotifyRes.status === 200
+    ? {
+        spotifyId: spotifyRes?.data?.id || '',
+        name: spotifyRes?.data?.name || artist,
+        spreadsheetName: artist.trim(),
+        imageUrl: spotifyRes?.data?.images[0]?.url || '',
+        popularity: spotifyRes?.data?.popularity || 0,
+        followers: spotifyRes?.data?.followers?.total || 0,
+        genres: spotifyRes?.data?.genres || [],
+      }
+    : {
+        spotifyId: '',
+        name: artist.trim(),
+        spreadsheetName: artist.trim(),
+        imageUrl: '',
+        popularity: 0,
+        followers: 0,
+        genres: [],
+      };
+};
+
 const mapArtists = async (artists) => {
   const mapped = [];
 
@@ -35,5 +62,6 @@ const mapArtists = async (artists) => {
 };
 
 module.exports = {
+  mapArtist,
   mapArtists,
 };

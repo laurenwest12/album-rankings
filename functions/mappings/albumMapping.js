@@ -1,5 +1,41 @@
 const { searchSpotify } = require('../../spotify/search');
 
+const mapAlbum = async (album) => {
+  const { Album, Artist, Month, Year, Genre } = album;
+
+  const spotifyRes = await searchSpotify({
+    q: `${Album},${Artist}`,
+    type: 'album',
+  });
+
+  const { data } = spotifyRes;
+
+  return spotifyRes.status === 200
+    ? {
+        spotifyId: data?.id,
+        name: data?.name,
+        spreadsheetName: Album.trim(),
+        spreadsheetArtist: Artist.trim(),
+        month: Month,
+        year: Year,
+        release_date: data.release_date,
+        genre: Genre,
+        tracks: data.total_tracks,
+        imageUrl: data?.images[0].url,
+      }
+    : {
+        spotifyId: '',
+        name: '',
+        spreadsheetName: Album.trim(),
+        spreadsheetArtist: Artist.trim(),
+        month: Month,
+        year: Year,
+        release_date: '',
+        genre: Genre,
+        imageUrl: '',
+      };
+};
+
 const mapAlbums = async (albums) => {
   const mapped = [];
 
@@ -44,5 +80,6 @@ const mapAlbums = async (albums) => {
 };
 
 module.exports = {
+  mapAlbum,
   mapAlbums,
 };

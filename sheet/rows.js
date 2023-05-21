@@ -1,3 +1,5 @@
+const { mapAlbum } = require('../functions/mappings/albumMapping');
+const { mapArtist } = require('../functions/mappings/artistMapping');
 const { sheetAuth } = require('./auth');
 
 const getRows = async () => {
@@ -21,6 +23,90 @@ const addToDatabase = async () => {
   rows[lastRowNumber - 1].Artist = 'Test Artist';
   rows[lastRowNumber - 1].Album = 'Test Album';
   await rows[lastRowNumber - 1].save();
+};
+
+const getData = async () => {
+  const rows = await getRows();
+  const artists = [];
+  const albums = [];
+  const reviews = [];
+
+  const freqArtist = {};
+
+  for (let i = 0; i < rows.length; ++i) {
+    // ARTIST PROCESS
+    // Get the artist name from the spreadsheet
+    let { Artist, Album, Genre, Month, Year } = rows[i];
+
+    // If it is the header row or the artist / album / genre are missing, skip this row
+    if (!Artist || Artist === 'Artist' || !Album || !Genre) continue;
+
+    Artist = Artist.trim();
+    Album = Album.trim();
+    Genre = Genre.trim();
+    Month = Month.trim();
+
+    if (!freqArtist[Artist]) {
+      // Add the artist to a frequency counter so it won't be mapped again
+      freqArtist[Artist] = 1;
+      // Map the artist to format needed for db
+      const mappedArtist = await mapArtist(Artist);
+      // Add artist to arr
+      artists.push(mappedArtist);
+    }
+
+    // ALBUM PROCESS
+    if (Album && Album !== 'Album' && Genre) {
+      const mappedAlbum = await mapAlbum({ Album, Artist, Month, Year, Genre });
+      albums.push(mappedAlbum);
+    }
+
+    // REVIEWS PROCESS
+    const {
+      LaurenRating,
+      TravisRating,
+      DougRating,
+      LaurenSong,
+      TravisSong,
+      DougSong,
+    } = rows[i];
+
+    if (DougRating && DougSong) {
+      reviews.push({
+        spreadsheetArtist: Artist,
+        spreadsheetAlbum: Album,
+        userName: 'Doug',
+        rating: DougRating,
+        favoriteSong: DougSong,
+      });
+    }
+
+    if (LaurenRating && LaurenSong) {
+      reviews.push({
+        spreadsheetArtist: Artist,
+        spreadsheetAlbum: Album,
+        userName: 'Lauren',
+        rating: LaurenRating,
+        favoriteSong: LaurenSong,
+      });
+    }
+
+    if (TravisRating && TravisSong) {
+      reviews.push({
+        spreadsheetArtist: Artist,
+        spreadsheetAlbum: Album,
+        userName: 'Travis',
+        rating: TravisRating,
+        favoriteSong: TravisSong,
+      });
+    }
+  }
+
+  return {
+    artists,
+    albums,
+    reviews,
+  };
 };
 
 const getArtists = async () => {
@@ -121,6 +207,7 @@ module.exports = {
   getRows,
   getLastRow,
   addToDatabase,
+  getData,
   getArtists,
   getAlbums,
   getReviews,

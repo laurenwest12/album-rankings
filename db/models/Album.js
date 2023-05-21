@@ -19,13 +19,13 @@ const Album = db.define('album', {
       notEmpty: true,
     },
   },
-  spreadsheetName: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate: {
-      notEmpty: true,
-    },
-  },
+  // spreadsheetName: {
+  //   type: Sequelize.STRING,
+  //   allowNull: false,
+  //   validate: {
+  //     notEmpty: true,
+  //   },
+  // },
   month: {
     type: Sequelize.STRING,
     allowNull: false,
@@ -55,6 +55,18 @@ const Album = db.define('album', {
     type: Sequelize.STRING,
     allowNull: false,
     defaultValue: '',
+  },
+  releaseDate: {},
+  dateAdded: {},
+  spotifyGenres: {
+    type: Sequelize.json,
+    allowNull: false,
+    defaultValue: [],
+  },
+  popularity: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    defaultValue: 0,
   },
 });
 

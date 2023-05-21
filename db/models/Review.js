@@ -7,16 +7,16 @@ const Review = db.define('review', {
     primaryKey: true,
     autoIncrement: true,
   },
-  spreadsheetAlbum: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    defaultValue: '',
-  },
-  spreadsheetArtist: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    defaultValue: '',
-  },
+  // spreadsheetAlbum: {
+  //   type: Sequelize.STRING,
+  //   allowNull: false,
+  //   defaultValue: '',
+  // },
+  // spreadsheetArtist: {
+  //   type: Sequelize.STRING,
+  //   allowNull: false,
+  //   defaultValue: '',
+  // },
   rating: {
     type: Sequelize.FLOAT,
     allowNull: false,
@@ -26,11 +26,11 @@ const Review = db.define('review', {
     allowNull: false,
     defaultValue: '',
   },
-  ranking: {
-    type: Sequelize.JSON,
-    allowNull: false,
-    defaultValue: [],
-  },
+  // ranking: {
+  //   type: Sequelize.JSON,
+  //   allowNull: false,
+  //   defaultValue: [],
+  // },
 });
 
 module.exports = Review;
